@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-import scapy
+from scapy.all import *
 
 # linux
 original_interface = os.environ['SNIFFER_INTERFACE']
@@ -35,7 +35,7 @@ def start():
     try:
         # Enable monitoring mode
         os.system(monitor_enable)
-        scapy.sniff(interface, prn=handle_packet)
+        sniff(interface, prn=handle_packet)
     except KeyboardInterrupt:
         sys.exit()
     finally:
