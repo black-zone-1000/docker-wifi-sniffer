@@ -4,6 +4,7 @@ import os
 import sys
 from scapy.all import *
 from jsonpacket import *
+import requests
 
 http_destination = os.environ['SNIFFER_DESTINATION']
 sniffing_filter = os.environ['SNIFFER_FILTER']
@@ -41,8 +42,11 @@ def os_execute(commands):
 
 def handle_packet(pkt):
     logging.info("Pkt captured")
-    converted = JsonPacket(pkt)
-    logging.info(str(converted))
+    json_packet = str(JsonPacket(pkt))
+    logging.info(json_packet)
+    logging.info("Sending packet to destination...")
+    response = requests.post(http_destination, data=json_packet, headers={'content-type': 'application/json'})
+    logging.info("Response=" + str(response))
 
 
 def exit_handler():
@@ -53,10 +57,10 @@ def exit_handler():
 def start():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     logging.info("Starting sniffer")
-    logging.info("interface=" + original_interface)
-    logging.info("channel=" + channel)
-    logging.info("filter=" + sniffing_filter)
-    logging.info("http destination=" + http_destination)
+    logging.info("interface = " + original_interface)
+    logging.info("channel = " + channel)
+    logging.info("filter = " + sniffing_filter)
+    logging.info("http destination = " + http_destination)
 
     logging.info("Disabling monitor mode interface for re-init")
     # First disable the monitor mode in case it was enabled in the past
