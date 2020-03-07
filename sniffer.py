@@ -41,12 +41,15 @@ def os_execute(commands):
 
 
 def handle_packet(pkt):
-    logging.info("Pkt captured")
-    json_packet = str(JsonPacket(pkt))
-    logging.info(json_packet)
-    logging.info("Sending packet to destination...")
-    response = requests.post(http_destination, data=json_packet, headers={'content-type': 'application/json'})
-    logging.info("Response=" + str(response))
+    try:
+        logging.info("Pkt captured")
+        json_packet = str(JsonPacket(pkt))
+        logging.info(json_packet)
+        logging.info("Sending packet to destination...")
+        response = requests.post(http_destination, data=json_packet, headers={'content-type': 'application/json'})
+        logging.info("Response=" + str(response))
+    except Exception as exp:
+        logging.error("Error handling packet . Error:" + str(exp))
 
 
 def exit_handler():
