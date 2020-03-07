@@ -31,7 +31,7 @@ def os_execute(commands):
             result = os.system(command)
             exit_code = result >> 8
             if exit_code != 0:
-                logging.error("Error executing - " + command + ". Exit code:" + exit_code)
+                logging.error("Error executing - " + command + ". Exit code:" + str(exit_code))
                 success = False
         except Exception as exp:
             logging.error("Error executing - " + command + ". Error:" + str(exp))
@@ -47,7 +47,7 @@ def handle_packet(pkt):
 
 
 def start():
-    logging.basicConfig(filename='/var/log/wifi-sniffer.log', format='%(levelname)s:%(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     logging.info("Starting sniffer")
     logging.info("interface=" + original_interface)
     logging.info("channel=" + channel)
