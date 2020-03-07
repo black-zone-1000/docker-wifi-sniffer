@@ -1,3 +1,4 @@
+import atexit
 import logging
 import os
 import sys
@@ -41,9 +42,12 @@ def os_execute(commands):
 def handle_packet(pkt):
     logging.info("Pkt captured")
     converted = JsonPacket(pkt)
-    logging.info(converted)
+    logging.info(str(converted))
 
-    print(converted)
+
+def exit_handler():
+    logging.info("Disable monitor mode on interface")
+    os_execute(monitor_disable)
 
 
 def start():
@@ -58,6 +62,8 @@ def start():
     # First disable the monitor mode in case it was enabled in the past
     os_execute(monitor_disable)
 
+    atexit.register(exit_handler)
+
     try:
         logging.info("Enabling monitor mode on interface")
         success = os_execute(monitor_enable)
@@ -67,10 +73,7 @@ def start():
         else:
             logging.error("Error changing to monitor mode. Exiting...")
     except KeyboardInterrupt:
-        sys.exit()
-    finally:
-        logging.info("Disable monitor mode on interface")
-        os_execute(monitor_disable)
+        pass
 
 
 start()
